@@ -61,6 +61,7 @@ function updateCard(person) {
     document.getElementById('location').appendChild(document.createTextNode(person.getLocation()));
 
     let city = person.getLocation().split(', ')[1];
+    console.log(city)
     CurrentTime(city).then(time => {
         let timeElement = document.getElementById('time');
         timeElement.textContent = '';
