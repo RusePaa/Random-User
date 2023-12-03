@@ -4,6 +4,7 @@ export class Person {
     #phone;
     #location;
     #avatar;
+    #time;
 
     constructor(name, email, phone, location, avatar) {
         this.#name = name;
@@ -11,6 +12,7 @@ export class Person {
         this.#phone = phone;
         this.#location = location;
         this.#avatar = avatar;
+        this.#time = null;
     }
 
     getName() {
@@ -31,5 +33,13 @@ export class Person {
 
     getAvatar() {
         return this.#avatar;
+    }
+
+    setTime(time) {
+        this.#time = time;
+    }
+
+    getTime() {
+        return this.#time;
     }
 }
