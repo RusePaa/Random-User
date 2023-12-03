@@ -9,9 +9,9 @@ window.onload = function() {
     const button = document.createElement('button');
     button.textContent = 'GENERATE USER';
     button.onclick = function() {
-        fetchUser(Person).then(person => {
-            updateCard(person);
-        }).catch(error => console.error('Error:', error));
+        fetchUser(Person)
+        .then(updateCard)
+        .catch(console.error);
     };
     container.append(button);
 }
@@ -20,9 +20,7 @@ function createCard() {
     let card = document.createElement('div');
     card.classList.add('card');
 
-    let avatar = createElement('img', 'avatar');
-    avatar.src = './user_nt_found.jpg';
-    card.appendChild(avatar);
+    card.appendChild(createElement('img', 'avatar', './user_nt_found.jpg'));
     card.appendChild(createElement('p', 'name', 'Name: name surname'));
     card.appendChild(createElement('p', 'email', 'Mail: mail'));
     card.appendChild(createElement('p', 'phone', 'phone: phone'));
@@ -32,10 +30,12 @@ function createCard() {
     return card;
 }
 
-function createElement(tag, id, text, isStrong = false) {
+function createElement(tag, id, text = '', isStrong = false) {
     const element = document.createElement(tag);
     element.id = id;
-    if (isStrong) {
+    if (tag === 'img') {
+        element.src = text;
+    } else if (isStrong) {
         const strong = document.createElement('strong');
         strong.textContent = text;
         element.appendChild(strong);
@@ -47,25 +47,21 @@ function createElement(tag, id, text, isStrong = false) {
 
 function updateCard(person) {
     document.getElementById('avatar').src = person.getAvatar();
-    document.getElementById('name').textContent = '';
-    document.getElementById('name').appendChild(createElement('span', '', 'Name: ', true));
-    document.getElementById('name').appendChild(document.createTextNode(person.getName()));
-    document.getElementById('email').textContent = '';
-    document.getElementById('email').appendChild(createElement('span', '', 'Mail: ', true));
-    document.getElementById('email').appendChild(document.createTextNode(person.getEmail()));
-    document.getElementById('phone').textContent = '';
-    document.getElementById('phone').appendChild(createElement('span', '', 'Phone: ', true));
-    document.getElementById('phone').appendChild(document.createTextNode(person.getPhone()));
-    document.getElementById('location').textContent = '';
-    document.getElementById('location').appendChild(createElement('span', '', 'Location: ', true));
-    document.getElementById('location').appendChild(document.createTextNode(person.getLocation()));
+    updateElement('name', 'Name: ', person.getName());
+    updateElement('email', 'Mail: ', person.getEmail());
+    updateElement('phone', 'Phone: ', person.getPhone());
+    updateElement('location', 'Location: ', person.getLocation());
 
     let city = person.getLocation().split(', ')[1];
-    console.log(city)
     CurrentTime(city).then(time => {
-        let timeElement = document.getElementById('time');
-        timeElement.textContent = '';
-        timeElement.appendChild(createElement('span', '', 'Current Time: ', true));
-        timeElement.appendChild(document.createTextNode(time));
-    }).catch(error => console.error('Error:', error));
+        person.setTime(time);
+        updateElement('time', 'Current Time: ', person.getTime());
+    }).catch(console.error);
+}
+
+function updateElement(id, label, value) {
+    const element = document.getElementById(id);
+    element.textContent = '';
+    element.appendChild(createElement('span', '', label, true));
+    element.appendChild(document.createTextNode(value));
 }
